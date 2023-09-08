@@ -114,17 +114,15 @@ class DLL:
 
     #delete a given node
     def delete_node(self, node):
-        #if list is empty
-        if self.head is None:
+        #if list is empty or this node doesnt exist
+        if node is None or self.head is None :
             return False
 
         #if it is head or tail node
         if node == self.head:
-            self.head = self.head.next
-            self.head.prev = None
+            return self.delete_head()
         elif node == self.tail:
-            self.tail = self.tail.prev
-            self.tail.next = None
+            return self.delete_tail()
         else : #middle node 
             #get its neighbours
             node1 = node.prev
@@ -134,10 +132,10 @@ class DLL:
             node1.next = node2
             node2.prev = node1
 
-        #update size
-        self.size = self.size -1
+            #update size
+            self.size = self.size -1
 
-        return True
+            return True
     
 
     # delete node at the given index
@@ -147,6 +145,24 @@ class DLL:
 
         #delete the node
         return self.delete_node(node)
+    
+    # delete node at start
+    def delete_head(self):
+        self.head = self.head.next
+        self.head.prev = None
+
+        self.size = self.size -1
+
+        return True
+    
+    # delete node at end
+    def delete_tail(self):
+        self.tail = self.tail.prev
+        self.tail.next = None
+
+        self.size = self.size -1
+
+        return True
 
 
     # find and return the node with data = x
@@ -171,6 +187,10 @@ class DLL:
 
     #get the node at the given index
     def get_node_at(self, i):
+        if i<0 or i>=self.size:
+            #index out of range
+            return None
+        
         current = self.head #node fro traversal
         for _ in range(i):
             current = current.next
@@ -234,7 +254,6 @@ class DLL:
         return -1
     
 
-
     #number of occurences of x
     def get_frequency(self, x):
         count = 0
@@ -244,6 +263,54 @@ class DLL:
                 count +=1
 
         return count
+    
+
+    #insert node before and after other nodes
+    #insert x before the given node
+    def insert_before(self, x, node2):
+        if node2 is None:
+            return None
+        if node2 is self.head:
+            return self.insert_at_start(x)
+        
+        node1 = node2.prev
+        node = Node(x)
+
+        node1.next = node
+        node2.prev = node
+
+        node.prev = node1
+        node.next = node2
+
+        #update size
+        self.size = self.size +1
+
+        return Node
+    
+
+    #insert x after the given node
+    def insert_after(self, x, node1):
+        if node1 is None:
+            return None
+        if node1 is self.tail:
+            return self.append(x)
+        
+        node2 = node1.next
+        node = Node(x)
+
+        node1.next = node
+        node2.prev = node
+
+        node.prev = node1
+        node.next = node2
+
+        #update size
+        self.size = self.size +1
+
+        return Node
+
+
+
 
         
 
